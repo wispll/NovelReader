@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_main"
+    app:startDestination="@id/mainFragment"
+    >
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.issac.novel.fragment.MainFragment"
+        android:label="MainFragment" >
+
+        <action
+            android:id="@+id/action_main_to_detail"
+            app:destination="@id/detailFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.issac.novel.fragment.DetailFragment"
+        android:label="DetailFragment" >
+
+        <action
+            android:id="@+id/action_detail_to_reader"
+            app:destination="@id/readerFragment" />
+
+        <argument
+            android:name="href"
+            app:argType="string"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/readerFragment"
+        android:name="com.issac.novel.fragment.ReaderFragment"
+        android:label="ReaderFragment" >
+
+        <argument
+            android:name="href"
+            app:argType="string"
+            />
+
+    </fragment>
+
+</navigation>

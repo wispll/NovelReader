@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<!--    <com.bifan.txtreaderlib.main.TxtReaderView-->
+<!--        android:id="@+id/activity_hwtxtplay_readerView"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        android:background="#ffffff" />-->
+
+    <com.issac.novel.TxtReaderView2
+        android:id="@+id/activity_hwtxtplay_readerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="#ffffff" />
+
+    <include
+        android:id="@+id/activity_hwtxtplay_menu_top"
+        layout="@layout/layout_reader_top"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        />
+
+    <include
+        android:id="@+id/activity_hwtxtplay_menu_bottom"
+        layout="@layout/layout_reader_bottom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        />
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:SpinKit_Color="@color/accent"
+        style="@style/SpinKitView.Circle"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

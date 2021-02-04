@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">novel</string>
+
+    <string name="bookshelf">书架</string>
+    <string name="novel">小说</string>
+    <string name="first_chapter">这已经是第一章</string>
+    <string name="last_chapter">这已经是最新一章</string>
+    <string name="loading_chapter">正在加载章节</string>
+</resources>
