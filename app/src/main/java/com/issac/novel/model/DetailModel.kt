@@ -14,11 +14,12 @@ import kotlinx.coroutines.withContext
 
 class DetailModel: ViewModel() {
 
-    private val liveData = MutableLiveData<Detail>()
 
     @Throws(Error::class)
     fun getLiveData(path: String): MutableLiveData<Detail>? {
         if(!NetworkUtils.isConnected()) throw NetworkUnavailableError()
+
+        val liveData = MutableLiveData<Detail>()
 
         viewModelScope.launch {
             val html = HttpClient.api().fetch(path).string()

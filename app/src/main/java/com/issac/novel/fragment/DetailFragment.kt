@@ -8,8 +8,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.issac.novel.R
@@ -42,15 +40,14 @@ class DetailFragment: Fragment(){
         chapter_recycle_view.addItemDecoration(ChapterItemDecoration(requireContext()))
 
         appbar_layout_toolbar.setNavigationOnClickListener{
-
-            Navigation.findNavController(it).popBackStack()
+            requireActivity().supportFragmentManager.popBackStack()
         }
 
         try {
 
             val model= ViewModelProvider(requireActivity()).get(DetailModel::class.java)
-            val safeArgs: DetailFragmentArgs by navArgs()
-            val liveData = model.getLiveData(safeArgs.href)
+            val href = arguments?.getString("href")
+            val liveData = model.getLiveData(href!!)
 
             liveData?.observe(viewLifecycleOwner,
                 Observer<Detail> { data ->
@@ -67,14 +64,10 @@ class DetailFragment: Fragment(){
 
                     val adapter = SimpleChapterAdapter(data.chapter_list)
                     chapter_recycle_view.adapter = adapter
-                    adapter.setItemClickListener(object: SimpleChapterAdapter.ItemClickListener{
-                        override fun onClick(item: SimpleChapter) {
-                            goReader(view, item.href)
-                            saveReadHistory(data, item)
-                        }
-
-                    })
-
+                    adapter.setItemClickListener{
+                            goReader(it.href)
+                            saveReadHistory(data, it)
+                    }
                 }
             )
         }catch (e: Exception){
@@ -85,9 +78,16 @@ class DetailFragment: Fragment(){
         }
     }
 
-    private fun goReader(view: View, href: String){
-        val action = DetailFragmentDirections.actionDetailToReader(href)
-        Navigation.findNavController(view).navigate(action)
+    private fun goReader(href: String){
+        val fragment = ReaderFragment()
+        val bundle = Bundle()
+        bundle.putString("href", href)
+        fragment.arguments  = bundle
+
+        requireActivity().supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, fragment, "readerFragment")
+            .addToBackStack("reader")
+            .commit()
     }
 
     private fun saveReadHistory(data: Detail, chapter: SimpleChapter){

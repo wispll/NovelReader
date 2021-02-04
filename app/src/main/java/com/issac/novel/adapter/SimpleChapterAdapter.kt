@@ -11,7 +11,7 @@ import com.issac.novel.extract.SimpleChapter
 
 class SimpleChapterAdapter(private val data: List<SimpleChapter>): RecyclerView.Adapter<SimpleChapterAdapter.DetailViewHolder>() {
 
-    lateinit var mItemClickListener: ItemClickListener
+    lateinit var mItemClickCallback: OnItemClickCallback
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailViewHolder {
         val view =
@@ -26,7 +26,7 @@ class SimpleChapterAdapter(private val data: List<SimpleChapter>): RecyclerView.
     override fun onBindViewHolder(holder: DetailViewHolder, position: Int) {
         holder.chapterTv?.text = data[position].name
         holder.chapterTv?.setOnClickListener{
-            mItemClickListener.onClick(data[position])
+            mItemClickCallback(data[position])
         }
     }
 
@@ -40,13 +40,11 @@ class SimpleChapterAdapter(private val data: List<SimpleChapter>): RecyclerView.
         }
     }
 
-    interface ItemClickListener{
-        fun onClick(item: SimpleChapter)
-    }
 
-    fun setItemClickListener(listener: ItemClickListener){
-            mItemClickListener = listener
+    fun setItemClickListener(callback: OnItemClickCallback){
+            mItemClickCallback = callback
     }
-
 }
+
+typealias OnItemClickCallback = (SimpleChapter) -> Unit
 

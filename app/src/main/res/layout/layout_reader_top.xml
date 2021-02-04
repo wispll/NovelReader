@@ -9,10 +9,10 @@
     android:paddingTop="13dp">
 
     <ImageView
+        android:id="@+id/back_image"
         android:layout_width="30dp"
         android:layout_height="18dp"
         android:layout_gravity="center_vertical"
-        android:onClick="BackClick"
         android:src="@drawable/ic_key_back" />
 
     <TextView
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text=""

@@ -1,16 +1,17 @@
 package com.issac.novel.adapter
 
+import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ImageView.ScaleType
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.issac.novel.extract.HotItem
-import androidx.recyclerview.widget.RecyclerView
-import android.widget.ImageView.ScaleType
-import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.navigation.Navigation
+import com.issac.novel.MainActivity
 import com.issac.novel.R
-import com.issac.novel.fragment.MainFragmentDirections
+import com.issac.novel.extract.HotItem
+import com.issac.novel.fragment.DetailFragment
 import com.youth.banner.adapter.BannerAdapter
 
 class PopularBannerAdapter(data: List<HotItem>)
@@ -33,10 +34,16 @@ class PopularBannerAdapter(data: List<HotItem>)
             .into(holder.imageView)
 
         holder.imageView.setOnClickListener{
+            val fragment = DetailFragment()
+            val arg = Bundle()
+            arg.putString("href", data?.href)
+            fragment.arguments = arg
 
-            val action = MainFragmentDirections.actionMainToDetail(data?.href!!)
-            Navigation.findNavController(it).navigate(action)
-
+            val activity = holder.imageView.context as MainActivity
+            activity.supportFragmentManager.beginTransaction()
+                .add(R.id.fragment_container, fragment,"detailFragment")
+                .addToBackStack("detail")
+                .commit()
         }
     }
 

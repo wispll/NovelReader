@@ -6,19 +6,20 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.navArgs
 import com.bifan.txtreaderlib.bean.TxtMsg
 import com.bifan.txtreaderlib.interfaces.ICenterAreaClickListener
 import com.bifan.txtreaderlib.interfaces.ILoadListener
 import com.bifan.txtreaderlib.main.TxtConfig
 import com.blankj.utilcode.util.ToastUtils
 import com.github.ybq.android.spinkit.SpinKitView
+import com.issac.novel.MainActivity
 import com.issac.novel.R
 import com.issac.novel.TxtReaderView2
 import com.issac.novel.extract.Content
@@ -51,8 +52,7 @@ open class ReaderFragment: Fragment() {
         initWhenLoadDone()
         registerListener()
 
-        val safeArgs: ReaderFragmentArgs by navArgs()
-        fetchContent(safeArgs.href)
+        fetchContent(arguments?.getString("href")!!)
 //        fetchContent("book/31583/404388.html")
     }
 
@@ -69,6 +69,7 @@ open class ReaderFragment: Fragment() {
         mSpinKit = view.findViewById(R.id.spin_kit)
 
         mMenuHolder = MenuHolder(
+            view.findViewById(R.id.back_image),
             view.findViewById(R.id.txtreadr_menu_title),
             view.findViewById(R.id.txtreadr_menu_chapter_pre),
             view.findViewById(R.id.txtreadr_menu_chapter_next),
@@ -86,6 +87,11 @@ open class ReaderFragment: Fragment() {
             view.findViewById(R.id.hwtxtreader_menu_style4),
             view.findViewById(R.id.hwtxtreader_menu_style5)
         )
+
+        mMenuHolder.mBackBt.setOnClickListener{
+            val activity = requireContext() as MainActivity
+            activity.supportFragmentManager.popBackStack()
+        }
     }
 
     private val StyleTextColors = intArrayOf(
@@ -236,6 +242,7 @@ open class ReaderFragment: Fragment() {
 
 
     private inner class MenuHolder(
+        var mBackBt: ImageView,
         var mTitle: TextView,
         var mPreChapter: TextView,
         var mNextChapter: TextView,
