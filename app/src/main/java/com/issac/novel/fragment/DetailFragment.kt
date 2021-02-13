@@ -1,6 +1,11 @@
 package com.issac.novel.fragment
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +18,11 @@ import com.bumptech.glide.Glide
 import com.issac.novel.R
 import com.issac.novel.adapter.ChapterItemDecoration
 import com.issac.novel.adapter.SimpleChapterAdapter
-import com.issac.novel.db.NovelHistory
 import com.issac.novel.extract.Detail
-import com.issac.novel.extract.SimpleChapter
 import com.issac.novel.model.DetailModel
-import com.issac.novel.model.HistoryModel
+import com.issac.novel.util.Util
 import kotlinx.android.synthetic.main.fragment_detail.*
 import timber.log.Timber
-import java.util.*
 
 class DetailFragment: Fragment(){
 
@@ -60,13 +62,26 @@ class DetailFragment: Fragment(){
                     title_tv.text = data.title
                     author_tv.text = data.author
                     intro_tv.text = data.intro
-                    latest_chapter_tv.text = data.latest_chapter
+
+                    latest_chapter_tv.text =  getHyperlinkSpannableString(data.latest_chapter)
+                    latest_chapter_tv.setOnClickListener{
+                        Util.goReader(requireActivity(), Arguments(
+                            data.latest_chapter_href,
+                            data.title,
+                            data.author
+                            )
+                        )
+                    }
 
                     val adapter = SimpleChapterAdapter(data.chapter_list)
                     chapter_recycle_view.adapter = adapter
                     adapter.setItemClickListener{
-                            goReader(it.href)
-                            saveReadHistory(data, it)
+                            Util.goReader(requireActivity(), Arguments(
+                                it.href,
+                                data.title,
+                                data.author
+                                )
+                            )
                     }
                 }
             )
@@ -78,25 +93,12 @@ class DetailFragment: Fragment(){
         }
     }
 
-    private fun goReader(href: String){
-        val fragment = ReaderFragment()
-        val bundle = Bundle()
-        bundle.putString("href", href)
-        fragment.arguments  = bundle
+    private fun getHyperlinkSpannableString(str: String): SpannableString{
 
-        requireActivity().supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, fragment, "readerFragment")
-            .addToBackStack("reader")
-            .commit()
-    }
-
-    private fun saveReadHistory(data: Detail, chapter: SimpleChapter){
-
-        val model= ViewModelProvider(requireActivity()).get(HistoryModel::class.java)
-        val item = NovelHistory(
-            UUID.nameUUIDFromBytes(data.title.toByteArray()).toString() ,data.title,data.author,chapter.name,chapter.href,System.currentTimeMillis()
-        )
-        model.save2Db(item)
+        val spannableString = SpannableString(str)
+        spannableString.setSpan(UnderlineSpan(), 0, str.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+        spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#338de6")), 0, str.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+        return spannableString
     }
 
 }

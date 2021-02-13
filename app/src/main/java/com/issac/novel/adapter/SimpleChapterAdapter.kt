@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.issac.novel.R
-import com.issac.novel.extract.SimpleChapter
+import com.issac.novel.extract.Chapter
 
 
-class SimpleChapterAdapter(private val data: List<SimpleChapter>): RecyclerView.Adapter<SimpleChapterAdapter.DetailViewHolder>() {
+class SimpleChapterAdapter(private val data: List<Chapter>): RecyclerView.Adapter<SimpleChapterAdapter.DetailViewHolder>() {
 
     lateinit var mItemClickCallback: OnItemClickCallback
 
@@ -46,5 +46,5 @@ class SimpleChapterAdapter(private val data: List<SimpleChapter>): RecyclerView.
     }
 }
 
-typealias OnItemClickCallback = (SimpleChapter) -> Unit
+typealias OnItemClickCallback = (Chapter) -> Unit
 

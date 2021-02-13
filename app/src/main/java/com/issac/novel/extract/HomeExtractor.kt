@@ -4,7 +4,7 @@ import org.jsoup.Jsoup
 
 data class Novel(
     val hotItemList: List<HotItem>,
-    val updateItemList: List<DetailedChapterItem>
+    val updateItemList: List<LatestChapter>
 )
 
 data class HotItem(
@@ -21,10 +21,10 @@ data class Genus(
 )
 
 
-data class DetailedChapterItem(
+data class LatestChapter(
     val genus: String,
-    val name: String,
-    val chapter: String,
+    val article_title: String,
+    val chapter_title: String,
     val author: String,
     val chapter_href: String,
     val content_href: String
@@ -75,10 +75,10 @@ class GenusExtractor: Extractor<MutableList<Genus>>{
 
 }
 
-class UpdateItemExtractor: Extractor<MutableList<DetailedChapterItem>>{
+class UpdateItemExtractor: Extractor<MutableList<LatestChapter>>{
 
-    override fun extract(html: String): MutableList<DetailedChapterItem> {
-        val result = mutableListOf<DetailedChapterItem>()
+    override fun extract(html: String): MutableList<LatestChapter> {
+        val result = mutableListOf<LatestChapter>()
 
         val document = Jsoup.parse(html)
         val elements = document.select("div.l li")
@@ -101,7 +101,7 @@ class UpdateItemExtractor: Extractor<MutableList<DetailedChapterItem>>{
             val author  = if(!authorElement.isEmpty()) authorElement.text() else
               it.select("span.s5").text()
 
-            result.add(DetailedChapterItem(genus, name, chapter, author, chapter_href, content_href))
+            result.add(LatestChapter(genus, name, chapter, author, chapter_href, content_href))
         }
 
         return result

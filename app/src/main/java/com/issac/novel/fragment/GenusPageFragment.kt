@@ -10,16 +10,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.issac.novel.R
-import com.issac.novel.adapter.PopularBannerAdapter
-import com.issac.novel.adapter.DetailedChapterAdapter
 import com.issac.novel.adapter.ChapterItemDecoration
+import com.issac.novel.adapter.DetailedChapterAdapter
+import com.issac.novel.adapter.PopularBannerAdapter
 import com.issac.novel.extract.Novel
 import com.issac.novel.model.NovelModel
-import kotlinx.android.synthetic.main.fragment_genus_page.*
+import com.issac.novel.util.Util
 import com.youth.banner.indicator.CircleIndicator
 import com.youth.banner.transformer.AlphaPageTransformer
+import kotlinx.android.synthetic.main.fragment_genus_page.*
 import timber.log.Timber
-import java.lang.Exception
 
 
 class GenusPageFragment: Fragment() {
@@ -57,8 +57,17 @@ class GenusPageFragment: Fragment() {
 
                     update_recycle_view.layoutManager = LinearLayoutManager(requireContext(),
                         LinearLayoutManager.VERTICAL, false)
-                    update_recycle_view.adapter = DetailedChapterAdapter(data.updateItemList)
                     update_recycle_view.addItemDecoration(ChapterItemDecoration(requireContext()))
+                    val ad = DetailedChapterAdapter(data.updateItemList)
+                    update_recycle_view.adapter = ad
+                    ad.setItemClickListener {
+                        Util.goReader(requireActivity(), Arguments(
+                            it.content_href,
+                            it.article_title,
+                            it.author
+                            )
+                        )
+                    }
 
                     spin_kit.visibility = View.GONE
 

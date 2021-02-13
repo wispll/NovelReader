@@ -9,10 +9,10 @@ data class Detail(
     val image: String,
     val latest_chapter: String,
     val latest_chapter_href: String,
-    val chapter_list: List<SimpleChapter>
+    val chapter_list: List<Chapter>
 )
 
-data class SimpleChapter(
+data class Chapter(
     val name: String,
     val href: String
 )
@@ -30,10 +30,10 @@ class DetailExtractor: Extractor<Detail>{
         val latestChapter = document.select("div#info > p:last-child a").text()
         val latestChapterHref = document.select("div#info > p:last-child a").attr("href")
 
-        val chapterList = mutableListOf<SimpleChapter>()
+        val chapterList = mutableListOf<Chapter>()
         document.select("div#list dd").forEach {
             val a = it.select("a")
-            val item = SimpleChapter(a.text(), a.attr("href"))
+            val item = Chapter(a.text(), a.attr("href"))
             chapterList.add(item)
         }
 

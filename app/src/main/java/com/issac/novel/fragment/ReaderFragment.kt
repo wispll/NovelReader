@@ -2,6 +2,7 @@ package com.issac.novel.fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -13,6 +14,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import com.bifan.txtreaderlib.bean.TxtMsg
 import com.bifan.txtreaderlib.interfaces.ICenterAreaClickListener
 import com.bifan.txtreaderlib.interfaces.ILoadListener
@@ -22,9 +25,13 @@ import com.github.ybq.android.spinkit.SpinKitView
 import com.issac.novel.MainActivity
 import com.issac.novel.R
 import com.issac.novel.TxtReaderView2
+import com.issac.novel.db.NovelHistory
 import com.issac.novel.extract.Content
 import com.issac.novel.model.ContentModel
+import com.issac.novel.model.HistoryModel
+import kotlinx.android.parcel.Parcelize
 import timber.log.Timber
+import java.util.*
 
 open class ReaderFragment: Fragment() {
 
@@ -35,6 +42,8 @@ open class ReaderFragment: Fragment() {
     private lateinit var mSpinKit: SpinKitView
 
     lateinit var mCurrentContent: Content
+    lateinit var mArticleTitle: String
+    lateinit var mAuthor: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +61,11 @@ open class ReaderFragment: Fragment() {
         initWhenLoadDone()
         registerListener()
 
-        fetchContent(arguments?.getString("href")!!)
+        val parcelable = arguments?.getParcelable<Arguments>("arg")
+        mArticleTitle = parcelable?.article_title.toString()
+        mAuthor = parcelable?.author.toString()
+
+        fetchContent(parcelable?.href!!)
 //        fetchContent("book/31583/404388.html")
     }
 
@@ -414,6 +427,15 @@ open class ReaderFragment: Fragment() {
                         mSpinKit.visibility = View.GONE
                         mIsLoading = false
                         mTxtReaderView.setLoadingStatus(false)
+
+                        saveReadHistory(requireActivity(), NovelHistory(
+                            UUID.nameUUIDFromBytes(mArticleTitle.toByteArray()).toString(),
+                            mArticleTitle,
+                            mAuthor,
+                            mCurrentContent.title,
+                            path,
+                            System.currentTimeMillis()
+                        ))
                     }
                 })
             })
@@ -425,5 +447,18 @@ open class ReaderFragment: Fragment() {
         }
 
     }
+
+    fun saveReadHistory(viewModelStoreOwner: ViewModelStoreOwner, history: NovelHistory){
+        val model= ViewModelProvider(viewModelStoreOwner).get(HistoryModel::class.java)
+        model.save2Db(history)
+    }
 }
+
+@Parcelize
+class Arguments(
+    val href: String,
+    val article_title: String,
+    val author: String
+): Parcelable
+
 

@@ -8,5 +8,6 @@
     android:gravity="center"
     android:textSize="18sp"
     android:textColor="@color/primary_text"
+    android:background="@color/simple_item_selector"
     xmlns:android="http://schemas.android.com/apk/res/android"
 />

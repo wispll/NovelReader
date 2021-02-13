@@ -11,11 +11,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.issac.novel.R
-import com.issac.novel.extract.DetailedChapterItem
+import com.issac.novel.extract.LatestChapter
 
 
-class DetailedChapterAdapter(private val data: List<DetailedChapterItem>): RecyclerView.Adapter<DetailedChapterAdapter.UpdateViewHolder>() {
+class DetailedChapterAdapter(private val data: List<LatestChapter>): RecyclerView.Adapter<DetailedChapterAdapter.UpdateViewHolder>() {
 
+    lateinit var mItemClickListener: OnItemClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UpdateViewHolder {
         val view =
@@ -28,9 +29,18 @@ class DetailedChapterAdapter(private val data: List<DetailedChapterItem>): Recyc
     }
 
     override fun onBindViewHolder(holder: UpdateViewHolder, position: Int) {
-        holder.titleTv?.text = data[position].name
-        holder.chapterTv?.text = data[position].chapter
+        holder.titleTv?.text = data[position].article_title
+        holder.chapterTv?.text = data[position].chapter_title
         holder.authorTv?.text = data[position].author
+        holder.itemView.setOnClickListener{
+            if(this::mItemClickListener.isInitialized){
+                mItemClickListener(data[position])
+            }
+        }
+    }
+
+    fun setItemClickListener(callback: OnItemClickListener){
+        mItemClickListener = callback
     }
 
     inner class UpdateViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -46,6 +56,8 @@ class DetailedChapterAdapter(private val data: List<DetailedChapterItem>): Recyc
         }
     }
 }
+
+typealias OnItemClickListener = (LatestChapter) -> Unit
 
 class ChapterItemDecoration(context: Context): RecyclerView.ItemDecoration() {
     private var dividerHeight: Float

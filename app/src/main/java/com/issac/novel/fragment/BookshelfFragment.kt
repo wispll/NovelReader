@@ -12,8 +12,9 @@ import com.issac.novel.R
 import com.issac.novel.adapter.ChapterItemDecoration
 import com.issac.novel.adapter.DetailedChapterAdapter
 import com.issac.novel.db.NovelHistory
-import com.issac.novel.extract.DetailedChapterItem
+import com.issac.novel.extract.LatestChapter
 import com.issac.novel.model.HistoryModel
+import com.issac.novel.util.Util
 import kotlinx.android.synthetic.main.fragment_bookshelf.*
 
 class BookshelfFragment: Fragment() {
@@ -38,16 +39,26 @@ class BookshelfFragment: Fragment() {
                 if(novelHistories.isNotEmpty()){
 
                     val map = novelHistories.map {
-                        DetailedChapterItem(
+                        LatestChapter(
                             "",
                             it.title,
                             it.chapter,
                             it.author,
-                            it.href,
-                            ""
+                            "",
+                            it.href
                         )
                     }
-                    history_recycleView.adapter = DetailedChapterAdapter(map)
+                    val ad = DetailedChapterAdapter(map)
+                    ad.setItemClickListener {
+                        Util.goReader(requireActivity(), Arguments(
+                            it.content_href,
+                            it.article_title,
+                            it.author
+                            )
+                        )
+                    }
+                    history_recycleView.adapter = ad
+
                 }
             }
         )
