@@ -8,41 +8,53 @@ import com.bifan.txtreaderlib.main.TxtReaderView
 class TxtReaderView2 : TxtReaderView{
 
 
-    private lateinit var mEdgePageTouchListen: EdgePageTouchListen
-    private var mIsLoading: Boolean = false
+    private lateinit var mEdgePageFlingCallback: EdgePageFlingCallback
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
 
-    override fun onActionMove(event: MotionEvent?) {
+    fun setEdgePageFlingCallback(callback: EdgePageFlingCallback){
+        mEdgePageFlingCallback = callback
+    }
 
-        when {
-            (mIsLoading) -> return
-            (event?.x!! > width/2 + 50) && isLastPage -> mEdgePageTouchListen.onTouch(false)
-            (event.x < width/2 - 50) && isFirstPage -> mEdgePageTouchListen.onTouch(true)
-            else -> super.onActionMove(event)
+
+    @Override
+    override fun onFling(
+        e1: MotionEvent,
+        e2: MotionEvent,
+        velocityX: Float,
+        velocityY: Float
+    ): Boolean {
+        val maxVelocityX = 1000f
+        if (CurrentMode == Mode.Normal) {//正常情况下快速滑动，执行翻页动作
+            if (isPagePre && velocityX > maxVelocityX) {
+
+                return when(isFirstPage){
+                    false -> {
+                        startPagePreAnimation()
+                        true
+                    }
+                    true -> {
+                        mEdgePageFlingCallback(true)
+                        false
+                    }
+                }
+            } else if (isPageNext && velocityX < -maxVelocityX) {
+                return when(isLastPage){
+                    false -> {
+                        startPageNextAnimation()
+                        true
+                    }
+                    true -> {
+                        mEdgePageFlingCallback(false)
+                        false
+                    }
+                }
+            }
         }
+        return false
     }
-
-    override fun onActionUp(event: MotionEvent?) {
-        if(mIsLoading)  return
-        super.onActionUp(event)
-    }
-
-    fun setLoadingStatus(isLoading: Boolean){
-        mIsLoading = isLoading
-    }
-
-
-    fun setEdgePageTouchListener(listen: EdgePageTouchListen){
-        mEdgePageTouchListen = listen
-    }
-
-   interface EdgePageTouchListen{
-       fun onTouch(pre: Boolean)
-   }
-
-
-
 }
+
+typealias EdgePageFlingCallback = (firstPage: Boolean) -> Unit

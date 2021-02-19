@@ -144,14 +144,13 @@ open class ReaderFragment: Fragment() {
     }
 
     private fun setOnEdgePageTouchListener() {
-        mTxtReaderView.setEdgePageTouchListener(object: TxtReaderView2.EdgePageTouchListen{
-            override fun onTouch(pre: Boolean) {
-                when(pre){
-                    true->  mMenuHolder.mPreChapter.performClick()
-                    false-> mMenuHolder.mNextChapter.performClick()
-                }
+        mTxtReaderView.setEdgePageFlingCallback {
+
+            when(it){
+                true->  mMenuHolder.mPreChapter.performClick()
+                false-> mMenuHolder.mNextChapter.performClick()
             }
-        })
+        }
     }
 
     private fun setExtraListener() {
@@ -325,7 +324,7 @@ open class ReaderFragment: Fragment() {
             }
 
             override fun onOutSideCenterClick(widthPercentInView: Float): Boolean {
-                return false
+                return true
             }
         })
     }
@@ -400,7 +399,6 @@ open class ReaderFragment: Fragment() {
                 return
             }
             mIsLoading = true
-            mTxtReaderView.setLoadingStatus(true)
         }
 
         mSpinKit.visibility = View.VISIBLE
@@ -426,7 +424,6 @@ open class ReaderFragment: Fragment() {
                         setBookName(it.title)
                         mSpinKit.visibility = View.GONE
                         mIsLoading = false
-                        mTxtReaderView.setLoadingStatus(false)
 
                         saveReadHistory(requireActivity(), NovelHistory(
                             UUID.nameUUIDFromBytes(mArticleTitle.toByteArray()).toString(),
@@ -443,7 +440,6 @@ open class ReaderFragment: Fragment() {
             Timber.e(e)
             ToastUtils.showLong(e.message)
             mIsLoading = false
-            mTxtReaderView.setLoadingStatus(false)
         }
 
     }
