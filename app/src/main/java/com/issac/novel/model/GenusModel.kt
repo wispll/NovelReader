@@ -8,6 +8,7 @@ import com.issac.novel.Error.NetworkUnavailableError
 import com.issac.novel.extract.Genus
 import com.issac.novel.extract.GenusExtractor
 import com.issac.novel.http.HttpClient
+import com.issac.novel.util.Util
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,7 +29,7 @@ class GenusModel : ViewModel() {
     }
 
     private fun loadData(){
-        viewModelScope.launch {
+        viewModelScope.launch(Util.coroutineExceptionHandler) {
             val html = HttpClient.api().fetch("").string()
             val genusList = withContext(Dispatchers.Default) {
                 GenusExtractor().extract(html)

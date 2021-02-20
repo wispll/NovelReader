@@ -8,6 +8,7 @@ import com.issac.novel.Error.NetworkUnavailableError
 import com.issac.novel.extract.Content
 import com.issac.novel.extract.ContentExtractor
 import com.issac.novel.http.HttpClient
+import com.issac.novel.util.Util
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -20,7 +21,7 @@ class ContentModel: ViewModel() {
 
         val liveData = MutableLiveData<Content>()
 
-        viewModelScope.launch {
+        viewModelScope.launch(Util.coroutineExceptionHandler) {
             val html = HttpClient.api().fetch(path).string()
             val content = withContext(Dispatchers.Default) {
                 ContentExtractor().extract(html)
@@ -32,4 +33,6 @@ class ContentModel: ViewModel() {
 
         return liveData
     }
+
 }
+

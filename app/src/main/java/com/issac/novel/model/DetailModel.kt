@@ -8,6 +8,7 @@ import com.issac.novel.Error.NetworkUnavailableError
 import com.issac.novel.extract.Detail
 import com.issac.novel.extract.DetailExtractor
 import com.issac.novel.http.HttpClient
+import com.issac.novel.util.Util
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,7 +22,7 @@ class DetailModel: ViewModel() {
 
         val liveData = MutableLiveData<Detail>()
 
-        viewModelScope.launch {
+        viewModelScope.launch(Util.coroutineExceptionHandler) {
             val html = HttpClient.api().fetch(path).string()
             val detail = withContext(Dispatchers.Default) {
                 DetailExtractor().extract(html)

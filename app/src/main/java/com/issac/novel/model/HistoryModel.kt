@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.issac.novel.db.NovelDataBase
 import com.issac.novel.db.NovelHistory
+import com.issac.novel.util.Util
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -12,7 +13,7 @@ import kotlinx.coroutines.withContext
 class HistoryModel: ViewModel(){
 
     fun save2Db(item: NovelHistory){
-        viewModelScope.launch {
+        viewModelScope.launch (Util.coroutineExceptionHandler){
             withContext(Dispatchers.Default){
 
                 NovelDataBase.instance.novelHistoryDao().insert(item)

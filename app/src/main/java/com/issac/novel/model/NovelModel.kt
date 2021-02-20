@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blankj.utilcode.util.NetworkUtils
 import com.issac.novel.Error.NetworkUnavailableError
-import com.issac.novel.extract.*
+import com.issac.novel.extract.HotItemsExtractor
+import com.issac.novel.extract.Novel
+import com.issac.novel.extract.UpdateItemExtractor
 import com.issac.novel.http.HttpClient
+import com.issac.novel.util.Util
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -33,7 +36,7 @@ class NovelModel: ViewModel(){
 
     private fun loadData(path: String): MutableLiveData<Novel>{
         val result = MutableLiveData<Novel>()
-        viewModelScope.launch {
+        viewModelScope.launch(Util.coroutineExceptionHandler) {
             try {
                 val html= HttpClient.api().fetch(path).string()
                 val hotItemDeferred = async(Dispatchers.Default) { HotItemsExtractor().extract(html) }
